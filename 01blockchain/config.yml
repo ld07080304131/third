@@ -1,0 +1,8 @@
+name:  测试brcue
+description: |
+   为创新应用提供基础业务支撑服务 - 区块链支撑
+version:  1.0.0
+category:  WEB
+maintainer:  liumiaocn
+license:  Apache 2
+projectURL: http://172.16.234.61/micro-third/third.git
