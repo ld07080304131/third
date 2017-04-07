@@ -1,8 +1,8 @@
-name:  æµ‹è¯•brcue
+name:  Î¢·şÎñ»ù´¡¼Ü¹¹
 description: |
-   ä¸ºåˆ›æ–°åº”ç”¨æä¾›åŸºç¡€ä¸šåŠ¡æ”¯æ’‘æœåŠ¡ - åŒºå—é“¾æ”¯æ’‘
+   Ìá¹©»ùÓÚspring cloudµÄ»ù´¡Î¢·şÎñ¼Ü¹¹£º°üÀ¨×¢²áÖĞĞÄ¡¢ÅäÖÃÖĞĞÄ¡¢¼à¿ØÖĞĞÄ¡¢·şÎñÍø¹Ø¡¢Íø¹Ø¸ºÔØ¾ùºâµÈ
 version:  1.0.0
 category:  WEB
-maintainer:  liumiaocn
+maintainer:  bruce
 license:  Apache 2
-projectURL: http://172.16.234.61/micro-third/third.git
+projectURL: https://github.com/ld07080304131/third.git

@@ -1,3 +1,130 @@
-#  nginx image
-nginx:
-  image:  nginx
+version: '2'
+services:
+  zipkin:
+    image: 172.16.234.101:5000/zipkin
+    stdin_open: true
+    tty: true
+    ports:
+    - 9411:9411/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.246.135
+  service-config:
+    image: 172.16.234.101:5000/service-config:0.0.1-SNAPSHOT
+    hostname: config
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+      spring.cloud.config.server.svn.uri: https://114.113.112.88:18093/svn/DAAS/trunk/Development/config
+    stdin_open: true
+    tty: true
+    links:
+    - discovery2:discovery
+    - discovery1:discovery
+    ports:
+    - 8889:8889/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
+  lb:
+    image: 172.16.234.101:5000/peter/nginx:dev
+    environment:
+      EDGE_A: edge:8443
+      EDGE_B: edge:8443
+    stdin_open: true
+    tty: true
+    links:
+    - edge-server:edge
+    ports:
+    - 443:443/tcp
+    labels:
+      io.rancher.container.pull_image: always
+  edge-server:
+    image: 172.16.234.101:5000/service-edge:0.0.1-SNAPSHOT
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+      spring.datasource.password: 1qaz2wsx#EDC
+      spring.datasource.tomcat.initialSize: '5'
+      spring.datasource.tomcat.maxActive: '20'
+      spring.datasource.tomcat.maxWait: '60000'
+      spring.datasource.tomcat.minEvictableIdleTimeMillis: '300000'
+      spring.datasource.tomcat.minIdle: '5'
+      spring.datasource.tomcat.testOnBorrow: 'true'
+      spring.datasource.tomcat.testOnReturn: 'true'
+      spring.datasource.tomcat.testWhileIdle: 'true'
+      spring.datasource.tomcat.timeBetweenEvictionRunsMillis: '60000'
+      spring.datasource.tomcat.validationQuery: SELECT 1
+      spring.datasource.url: jdbc:mysql://172.16.234.84:3306/oauth2
+      spring.datasource.username: root
+      zuul.max.host.connections: '800'
+      zuul.host.socket-timeout-millis: '60000'
+      zuul.host.connect-timeout-millis: '60000'
+      ribbon.ConnectTimeout: '60000'
+      hystrix.command.default.execution.timeout.enabled: 'false'
+    stdin_open: true
+    tty: true
+    links:
+    - discovery1:discovery
+    ports:
+    - 8443:8443/tcp
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: group=microservice
+  service-monitor:
+    image: 172.16.234.101:5000/service-monitor
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+    stdin_open: true
+    tty: true
+    links:
+    - discovery1:discovery
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
+  discovery2:
+    image: 172.16.234.101:5000/service-discovery
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+      eureka.instance.instance-id: $${spring.cloud.client.ipAddress}:$${server.port}
+      eureka.instance.preferIpAddress: 'true'
+      spring.profiles.active: peer2
+    stdin_open: true
+    tty: true
+    links:
+    - discovery1:discovery
+    ports:
+    - 8761:8761/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.1.44
+  discovery1:
+    image: 172.16.234.101:5000/service-discovery
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+      eureka.instance.instance-id: $${spring.cloud.client.ipAddress}:$${server.port}
+      eureka.instance.preferIpAddress: 'true'
+      spring.profiles.active: peer1
+    stdin_open: true
+    tty: true
+    links:
+    - discovery2:discovery
+    ports:
+    - 8761:8761/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
+      io.rancher.container.requested_ip: 10.42.1.33
+  daas-monitor:
+    image: 172.16.234.101:5000/daas-monitor
+    environment:
+      eureka.client.service-url.defaultZone: http://discovery:8761/eureka/
+    stdin_open: true
+    tty: true
+    links:
+    - discovery1:discovery
+    ports:
+    - 9080:9080/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: group=microservice
+      io.rancher.container.pull_image: always
