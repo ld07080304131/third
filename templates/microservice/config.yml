@@ -1,7 +1,7 @@
 name:  microservice
 description: |
    microservice image
-version:  2
+version:  1.0.0
 category:  WEB
 maintainer:  liumiaocn
 license:  Apache 2
