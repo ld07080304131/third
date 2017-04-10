@@ -1,6 +1,6 @@
-name:  微服务基础架构
+name:  寰湇鍔″熀纭�鏋舵瀯
 description: |
-   提供基于spring cloud的基础微服务架构：包括注册中心、配置中心、监控中心、服务网关、网关负载均衡等
+   test
 version:  1.0.0
 category:  WEB
 maintainer:  bruce
