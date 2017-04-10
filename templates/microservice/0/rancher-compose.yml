@@ -1,4 +1,7 @@
 version: '2'
+catalog:
+  name: microservice
+  version: 1.0.0
 services:
   zipkin:
     retain_ip: true
