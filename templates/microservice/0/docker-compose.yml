@@ -76,7 +76,6 @@ services:
     links:
     - discovery1:discovery
     labels:
-      io.rancher.scheduler.affinity:host_label: group=microservice
       io.rancher.container.pull_image: always
   discovery2:
     image: 172.16.234.101:5000/service-discovery
